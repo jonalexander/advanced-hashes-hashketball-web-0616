@@ -198,3 +198,58 @@ def big_shoe_rebounds
 
   return biggest_shoe_hash[:rebounds]
 end
+
+### BONUS
+
+def most_points_scored
+  most_points_scored_hash = nil
+
+  game_hash.each do |location, data_hash|
+    data_hash[:players].each do |player, player_hash|
+      #define biggest_shoe_hash as the first player_hash we iterate over as a benchmark      
+      most_points_scored_hash ||= player_hash
+      most_points_scored_hash = player_hash if player_hash[:points] > most_points_scored_hash[:points]
+    end
+  end
+
+  return most_points_scored_hash[:name]
+end
+
+def winning_team
+  scores = []
+
+  game_hash.collect do |location, data_hash|
+    data_hash[:total_points] = (data_hash[:players].collect { |player, player_hash| player_hash[:points] }.inject { |sum, x| sum + x })
+    scores.push(data_hash[:team_name], data_hash[:total_points])
+  end
+
+  scores[1] > scores[3] ? scores[0] : scores[2]
+end
+
+
+def player_with_longest_name
+  longest_name_hash = nil
+
+  game_hash.each do |location, data_hash|
+    data_hash[:players].each do |player, player_hash|
+      longest_name_hash ||= player_hash
+      longest_name_hash = player_hash if player_hash[:name].size > longest_name_hash[:name].size
+    end
+  end
+
+  return longest_name_hash[:name]
+end
+
+def long_name_steals_a_ton?
+  most_steals_hash = nil
+
+  game_hash.each do |location, data_hash|
+    data_hash[:players].each do |player, player_hash|
+      most_steals_hash ||= player_hash
+      most_steals_hash = player_hash if player_hash[:steals] > most_steals_hash[:steals]
+    end
+  end  
+
+  most_steals_hash[:name] == player_with_longest_name ? true : false
+end
+
